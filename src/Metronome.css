@@ -1,19 +1,19 @@
-.App {
+.Metronome {
   text-align: center;
 }
 
-.App-logo {
+.Metronome-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  .Metronome-logo {
+    animation: Metronome-logo-spin infinite 20s linear;
   }
 }
 
-.App-header {
+.Metronome-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -24,11 +24,11 @@
   color: white;
 }
 
-.App-link {
+.Metronome-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+@keyframes Metronome-logo-spin {
   from {
     transform: rotate(0deg);
   }
