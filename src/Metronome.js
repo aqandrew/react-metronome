@@ -14,13 +14,29 @@ class Metronome extends Component {
       playing: false,
       bpm: 120,
       count: 0,
+      // TODO Add controls for changing time signature
       beatsPerMeasure: 4
     };
   }
 
   handleBpmChange = (event) => {
     const bpm = event.target.value;
-    this.setState({ bpm });
+
+    if (this.state.playing) {
+      clearInterval(this.timer);
+      // TODO Refactor this statement into a function
+      this.timer = setInterval(
+        this.playClick,
+        (60 / this.state.bpm) * 1000
+      );
+      this.setState({
+        count: 0,
+        bpm
+      });
+    }
+    else {
+      this.setState({ bpm });
+    }
   };
 
   handleStartStop = () => {
