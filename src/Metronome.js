@@ -9,26 +9,31 @@ class Metronome extends Component {
 
     this.click1 = new Audio(click1);
     this.click2 = new Audio(click2);
+    this.beatUnits = [...Array(4).keys()].map(n => 2 ** (n + 1)); // powers of 2, up to 16
 
     this.state = {
       playing: false,
       bpm: 120,
       count: 0,
-      // TODO Add controls for changing time signature
-      beatsPerMeasure: 4
+      beatsPerMeasure: 4,
+      beatUnit: 4
     };
   }
+
+  startMetronome = () => {
+    clearInterval(this.timer);
+    // TODO Obtain better timing by implementing Web Audio scheduler: https://github.com/cwilso/metronome
+    this.timer = setInterval(
+      this.playClick,
+      (60 / this.state.bpm) * 1000
+    );
+  };
 
   handleBpmChange = (event) => {
     const bpm = event.target.value;
 
     if (this.state.playing) {
-      clearInterval(this.timer);
-      // TODO Refactor this statement into a function
-      this.timer = setInterval(
-        this.playClick,
-        (60 / this.state.bpm) * 1000
-      );
+      this.startMetronome();
       this.setState({
         count: 0,
         bpm
@@ -39,6 +44,17 @@ class Metronome extends Component {
     }
   };
 
+  // TODO Should metronome restart when time signature changes?
+  handleBeatsPerMeasureChange = (event) => {
+    const beatsPerMeasure = event.target.value;
+    this.setState({ beatsPerMeasure });
+  };
+  
+  handleBeatUnitChange = (event) => {
+    const beatUnit = event.target.value;
+    this.setState({ beatUnit });
+  };
+
   handleStartStop = () => {
     if (this.state.playing) {
       clearInterval(this.timer);
@@ -47,6 +63,7 @@ class Metronome extends Component {
       });
     }
     else {
+      // TODO Take beat unit into account
       this.timer = setInterval(
         this.playClick,
         (60 / this.state.bpm) * 1000
@@ -78,7 +95,7 @@ class Metronome extends Component {
   };
 
   render() {
-    const { playing, bpm } = this.state;
+    const { playing, bpm, beatsPerMeasure, beatUnit } = this.state;
 
     return (
       <div className="container">
@@ -94,6 +111,32 @@ class Metronome extends Component {
               value={bpm}
               onChange={this.handleBpmChange}
               className="form-control-range w-100 m-4" />
+            <div className="form-group">
+              <label htmlFor="beats-per-measure">beats per measure</label>
+              <input
+                type="number"
+                min="1"
+                max="15"
+                value={beatsPerMeasure}
+                className="form-control"
+                id="beats-per-measure"
+                onChange={this.handleBeatsPerMeasureChange} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="beat-unit">beat unit</label>
+              <select
+                type="number"
+                min="1"
+                max="15"
+                value={beatUnit}
+                className="form-control"
+                id="beat-unit"
+                onChange={this.handleBeatUnitChange}>
+                {this.beatUnits.map((unit, index) => {
+                  return <option key={index}>{unit}</option>
+                })}
+              </select>
+            </div>
           </div>
           <button
             onClick={this.handleStartStop}
