@@ -25,7 +25,7 @@ class Metronome extends Component {
     // TODO Obtain better timing by implementing Web Audio scheduler: https://github.com/cwilso/metronome
     this.timer = setInterval(
       this.playClick,
-      (60 / this.state.bpm) * 1000
+      60 / this.state.bpm * 4 / this.state.beatUnit * 1000 // quarter note is our baseline
     );
   };
 
@@ -44,15 +44,14 @@ class Metronome extends Component {
     }
   };
 
-  // TODO Should metronome restart when time signature changes?
   handleBeatsPerMeasureChange = (event) => {
     const beatsPerMeasure = event.target.value;
-    this.setState({ beatsPerMeasure });
+    this.setState({ beatsPerMeasure }, this.startMetronome);
   };
   
   handleBeatUnitChange = (event) => {
     const beatUnit = event.target.value;
-    this.setState({ beatUnit });
+    this.setState({ beatUnit }, this.startMetronome);
   };
 
   handleStartStop = () => {
@@ -63,11 +62,7 @@ class Metronome extends Component {
       });
     }
     else {
-      // TODO Take beat unit into account
-      this.timer = setInterval(
-        this.playClick,
-        (60 / this.state.bpm) * 1000
-      );
+      this.startMetronome();
       this.setState(
         {
           playing: true,
