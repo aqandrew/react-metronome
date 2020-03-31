@@ -25,11 +25,11 @@ class Metronome extends Component {
     // TODO Obtain better timing by implementing Web Audio scheduler: https://github.com/cwilso/metronome
     this.timer = setInterval(
       this.playClick,
-      60 / this.state.bpm * 4 / this.state.beatUnit * 1000 // quarter note is our baseline
+      (((60 / this.state.bpm) * 4) / this.state.beatUnit) * 1000 // quarter note is our baseline
     );
   };
 
-  handleBpmChange = (event) => {
+  handleBpmChange = event => {
     const bpm = event.target.value;
 
     if (this.state.playing) {
@@ -38,18 +38,17 @@ class Metronome extends Component {
         count: 0,
         bpm
       });
-    }
-    else {
+    } else {
       this.setState({ bpm });
     }
   };
 
-  handleBeatsPerMeasureChange = (event) => {
+  handleBeatsPerMeasureChange = event => {
     const beatsPerMeasure = event.target.value;
     this.setState({ beatsPerMeasure }, this.startMetronome);
   };
-  
-  handleBeatUnitChange = (event) => {
+
+  handleBeatUnitChange = event => {
     const beatUnit = event.target.value;
     this.setState({ beatUnit }, this.startMetronome);
   };
@@ -60,8 +59,7 @@ class Metronome extends Component {
       this.setState({
         playing: false
       });
-    }
-    else {
+    } else {
       this.startMetronome();
       this.setState(
         {
@@ -78,8 +76,7 @@ class Metronome extends Component {
 
     if (count % beatsPerMeasure === 0) {
       this.click2.play();
-    }
-    else {
+    } else {
       this.click1.play();
     }
 
@@ -105,7 +102,8 @@ class Metronome extends Component {
               max="240"
               value={bpm}
               onChange={this.handleBpmChange}
-              className="form-control-range w-100 m-4" />
+              className="form-control-range w-100 m-4"
+            />
             <div className="form-group">
               <label htmlFor="beats-per-measure">beats per measure</label>
               <input
@@ -115,7 +113,8 @@ class Metronome extends Component {
                 value={beatsPerMeasure}
                 className="form-control"
                 id="beats-per-measure"
-                onChange={this.handleBeatsPerMeasureChange} />
+                onChange={this.handleBeatsPerMeasureChange}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="beat-unit">beat unit</label>
@@ -126,16 +125,18 @@ class Metronome extends Component {
                 value={beatUnit}
                 className="form-control"
                 id="beat-unit"
-                onChange={this.handleBeatUnitChange}>
+                onChange={this.handleBeatUnitChange}
+              >
                 {this.beatUnits.map((unit, index) => {
-                  return <option key={index}>{unit}</option>
+                  return <option key={index}>{unit}</option>;
                 })}
               </select>
             </div>
           </div>
           <button
             onClick={this.handleStartStop}
-            className="btn btn-primary btn-lg">
+            className="btn btn-primary btn-lg"
+          >
             {playing ? 'Stop' : 'Start'}
           </button>
         </div>
